@@ -1,0 +1,18 @@
+.sortable {
+    position: relative;
+    padding-right: 15px;
+    cursor: pointer;
+    user-select: none;
+    &::after {
+        font-family: 'Icons';
+        position: absolute;
+        right: 1px;
+        content: '\f0dc';
+    }      
+    &.ascending::after {
+        content: '\f0de'
+    }  
+    &.descending::after {
+        content: '\f0dd'
+    }  
+}

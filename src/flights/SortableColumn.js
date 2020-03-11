@@ -1,6 +1,7 @@
 import React from 'react';
 import { sortDirections } from './sort-directions'
 import PropTypes from 'prop-types';
+import './SortableColumn.scss'
 
 
 /**
