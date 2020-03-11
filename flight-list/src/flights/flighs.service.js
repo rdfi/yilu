@@ -1,8 +1,4 @@
-export const sortDirections = {
-    ascending: 'ascending',
-    descending: 'descending',
-    none: ''
-}
+import {sortDirections} from './sort-directions';
 
 export async function getFlights(sortColumn = '', sortDirection = sortDirections.none) {    
     const results = flights.filter(f => f.type === 'FLIGHT');        

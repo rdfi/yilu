@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getFlights, sortDirections } from './flighs.service'
+import PropTypes from 'prop-types';
+import { getFlights } from './flighs.service'
 import { Table } from 'semantic-ui-react';
 import { getDateFromUnixTime } from '../unix-time.service';
 import moment from 'moment';
 import './FlightList.scss'
+import { SortableColumn } from './SortableColumn';
 
 export function FlightList() {
     const [flights, setFlights] = useState(/**@type {import('./flighs.service').Flight[]} */([]));
@@ -14,6 +16,10 @@ export function FlightList() {
             alert(error);
         });
     }, [sortOptions])
+
+    if (flights.length === 0){
+        return <h4>No flights</h4>
+    }
 
     return (<div className="flight-list">
         <Table>
@@ -44,33 +50,14 @@ function FlightRow({ flight }) {
             <Table.Cell>{flight.detail.flight_number}</Table.Cell>
             <Table.Cell>{flight.origin.value}</Table.Cell>
             <Table.Cell>{flight.destination.value}</Table.Cell>
-            <Table.Cell>{boardingTime}</Table.Cell>
-            <Table.Cell>{departureTime}</Table.Cell>
-            <Table.Cell>{flight?.detail?.gate || 'N/A'}</Table.Cell>
-            <Table.Cell>{flight?.detail?.seat || 'N/A'}</Table.Cell>
+            <Table.Cell data-testid="boarding-time">{boardingTime}</Table.Cell>
+            <Table.Cell data-testid="departure-time">{departureTime}</Table.Cell>
+            <Table.Cell data-testid="gate-info">{flight?.detail?.gate || 'N/A'}</Table.Cell>
+            <Table.Cell data-testid="seat-info">{flight?.detail?.seat || 'N/A'}</Table.Cell>
         </Table.Row>
     )
 }
 
-function SortableColumn({ columnName, sortOptions, children, onSortingChanged }) {    
-    const sortDirection = sortOptions?.columnName === columnName ? sortOptions?.direction : sortDirections.none;
-    function handleSortingChanged() {
-        switch (sortDirection) {
-            case sortDirections.none:
-                onSortingChanged({columnName, direction: sortDirections.descending});
-                break;
-            case sortDirections.descending:
-                onSortingChanged({columnName, direction: sortDirections.ascending});
-                break;
-            case sortDirections.ascending:
-                onSortingChanged({columnName, direction: sortDirections.none});
-                break;
-            default:
-                throw new Error('Invalid sort direction');
-        }
-    }
-
-    return <div className={`sortable ${sortDirection || ''}`} onClick={handleSortingChanged}>
-        {children}
-    </div>
+FlightRow.propTypes = {
+    flight: PropTypes.object.isRequired
 }
